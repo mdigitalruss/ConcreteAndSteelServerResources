@@ -1,0 +1,12 @@
+<cnsds>
+	<config
+		name="Concrete And Steel Dedicated Server" 
+		port="2302" 
+		map="FlatGrass" 
+		broadcast="true" 
+		build_password="" 
+		autosave="true" 
+		autosave_minutes="10" 
+		autosave_name="default" 
+	/>
+</cnsds>

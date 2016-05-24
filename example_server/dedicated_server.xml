@@ -1,0 +1,12 @@
+<cnsds>
+	<config
+		name="Example Flatsand Dedicated Server" 
+		port="2302" 
+		map="FlatSand" 
+		broadcast="true" 
+		build_password="" 
+		autosave="true" 
+		autosave_minutes="10" 
+		autosave_name="default" 
+	/>
+</cnsds>
