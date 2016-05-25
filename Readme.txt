@@ -53,7 +53,7 @@ Configuration using dedicated_server.xml
 <cnsds>
 	<config
 		name="Concrete And Steel Dedicated Server" 
-		port="2302" 
+		port="65433" 
 		map="FlatGrass" 
 		broadcast="true" 
 		build_password="" 

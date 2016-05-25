@@ -1,7 +1,7 @@
 <cnsds>
 	<config
 		name="Example Flatsand Dedicated Server" 
-		port="2302" 
+		port="65433" 
 		map="FlatSand" 
 		broadcast="true" 
 		build_password="" 
