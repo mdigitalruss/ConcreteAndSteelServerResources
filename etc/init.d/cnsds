@@ -1,0 +1,100 @@
+#!/bin/sh
+#
+# CNSDS Dedicated Server start/stop
+# (c) 2016 Russ Peterson / Matterhorn Software LTD
+# /etc/init.d/cnsds start|stop|restart|reload|status <id>
+
+# The daemon's base name (to ensure uniqueness and for stop, restart and status)
+name="CNSDS"  
+# The location of the config folders for the server
+config_location="/home/steam/steamcmd/cnsds/"
+# The path of the server executable
+command="/home/steam/steamcmd/cnsds/cnsds.x86_64"  
+# Command line arguments for the server executable
+command_args="-batchmode"  
+# The path of the daemon executable
+daemon="/usr/bin/daemon"
+
+[ -x "$daemon" ] || exit 0
+[ -x "$command" ] || exit 0
+
+# Note: The following daemon option arguments could be in /etc/daemon.conf
+# instead. That would probably be better because if the command itself were
+# there as well then we could just use the name here to start the daemon.
+# Here's some code to do it here in case you prefer that.
+
+# Any command line arguments for the daemon executable (when starting)
+daemon_start_args="" # e.g. --inherit --env="ENV=VAR" --unsafe  
+# The pidfile directory (need to force this so status works for normal users)
+pidfiles="/run/cnsds"  
+# The user[:group] to run as (if not to be run as root)
+user=""  
+# The path to chroot to (otherwise /)
+chroot=""  
+# The path to chdir to (otherwise /)
+chdir=""  
+# The umask to adopt, if any
+umask=""  
+# The syslog facility or filename for the client's stdout (otherwise discarded)
+stdout="daemon.info"  
+# The syslog facility or filename for the client's stderr (otherwise discarded)
+stderr="daemon.err"
+
+case "$1" in  
+    start)
+		procname="CNSDS_$2"
+        # This if statement isn't strictly necessary but it's user friendly
+        if "$daemon" --running --name "$procname" --pidfiles "$pidfiles"
+        then
+            echo "$procname is already running."
+        else
+			cmdargs="$command_args id=$config_location$2"
+            echo -n "Starting $procname $cmdargs..."
+            "$daemon" --respawn $daemon_start_args \
+                --name "$procname" --pidfiles "$pidfiles" \
+                ${user:+--user $user} ${chroot:+--chroot $chroot} \
+                ${chdir:+--chdir $chdir} ${umask:+--umask $umask} \
+                ${stdout:+--stdout $stdout} ${stderr:+--stderr $stderr} \
+                -- \
+                "$command" $cmdargs
+            echo done.
+        fi
+        ;;
+
+    stop)
+		procname="CNSDS_$2"
+        # This if statement isn't strictly necessary but it's user friendly
+        if "$daemon" --running --name "$procname" --pidfiles "$pidfiles"
+        then
+            echo -n "Stopping $procname..."
+            "$daemon" --stop --name "$procname" --pidfiles "$pidfiles"
+            echo done.
+        else
+            echo "$procname is not running."
+        fi
+        ;;
+
+    restart|reload)
+		procname="CNSDS_$2"
+        if "$daemon" --running --name "$procname" --pidfiles "$pidfiles"
+        then
+            echo -n "Restarting $procname..."
+            "$daemon" --restart --name "$procname" --pidfiles "$pidfiles"
+            echo done.
+        else
+            echo "$procname is not running."
+            exit 1
+        fi
+        ;;
+
+    status)
+		procname="CNSDS_$2"
+        "$daemon" --running --name "$procname" --pidfiles "$pidfiles" --verbose
+        ;;
+
+    *)
+        echo "usage: $0 <start|stop|restart|reload|status> <id>" >&2
+        exit 1
+esac
+
+exit 0  

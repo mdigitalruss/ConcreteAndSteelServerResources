@@ -100,6 +100,26 @@ Otherwise, it will generate the savegame file in the root dir:
 ./[map]_savegame_[autosave_name].xml
 
 ----------------------------------------------------------------------------------
+Daemon
+----------------------------------------------------------------------------------
+An example bash script for a daemon is located at /etc/init.d/cnsds
+
+To start a server run "/etc/init.d/cnsds start 1234"
+
+This will start a server with the id of 1234, and therefore will load the xml 
+from ./1234/dedicated_Server.xml
+
+When you need to stop a server, run "/etc/init.d/cnsds stop 1234" where 1234 is the
+id of your server.
+
+This ensures you always kill the correct instance of cnsds where you are running 
+multiple instances on one physical server. Make sure you do not start two servers 
+on the same ip/port combo. Always customise the dedicated_server.xml.
+
+Make sure you customise the variables of the bash script to point to the location 
+of your dedicated server installation.
+
+----------------------------------------------------------------------------------
 Further Information and Support
 ----------------------------------------------------------------------------------
 Help can be found on our forum: http://forum.concreteandsteel.net/
